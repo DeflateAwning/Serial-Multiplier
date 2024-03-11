@@ -14,42 +14,48 @@ module testbench ();
    multiplier DUT(.clk(CLK), .reset(RESET), .start(START), .in1(IN1), .in2(IN2), .out(OUT), .done(DONE));
    
    always
-     begin 
-        #5 CLK = !CLK;
-     end
+    begin 
+    #5 CLK = !CLK;
+    end
    
+    initial
+    begin
+    $dumpfile("test.vcd");
+    $dumpvars(0, testbench);
+    end
+
    initial
      begin
         CLK = 0;
         RESET = 0;
-	START = 0;        
+        START = 0;        
 
         #2 RESET = 1;
         
         @(negedge CLK);
         
-	RESET = 0;
-	
+        RESET = 0;
+        
         @(negedge CLK);
         
-	IN1 = 16'd8648;
-	IN2 = 16'd2301;
+        IN1 = 16'd8648;
+        IN2 = 16'd2301;
 
-	// expected out: 19899048
+        // expected out: 19899048 = 0x12fa2a8
 
         @(negedge CLK);
 
-	START = 1;
+        START = 1;
 
-	@(negedge CLK);
+        @(negedge CLK);
 
-	@(negedge CLK);
+        @(negedge CLK);
 
-	@(negedge CLK);
+        @(negedge CLK);
 
-	START = 0;
+        START = 0;
 
-	#200
+        #200
      
         $stop;
      end
